@@ -1,4 +1,4 @@
-package com.SeungMi.projectboard;
+package SeungMiprojectboard;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
