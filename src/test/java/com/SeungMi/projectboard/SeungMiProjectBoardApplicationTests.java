@@ -1,4 +1,4 @@
-package SeungMiprojectboard;
+package com.SeungMi.projectboard;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
