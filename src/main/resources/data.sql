@@ -1,3 +1,9 @@
+-- 테스트 계정
+-- TODO: 테스트용이지만 비밀번호가 노출된 데이터 세팅. 개선하는 것이 좋을 지 고민해 보자.
+insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by, modified_at, modified_by) values
+    ('uno', 'asdf1234', 'tmdal8265', 'tmdal8265@mail.com', 'I am tmdal8265.', now(), 'tmdal8265', now(), 'tmdal8265')
+;
+
 insert into article (title, content, hashtag, created_by, modified_by, created_at, modified_at) values ('Maecenas ut massa quis augue luctus tincidunt.', 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.', 'Khaki', 'Earl', 'Hubie', '2022-08-24 07:45:39', '2023-05-19 14:10:26');
 insert into article (title, content, hashtag, created_by, modified_by, created_at, modified_at) values ('Nulla ut erat id mauris vulputate elementum.', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', 'Mauv', 'Arnaldo', 'Arnie', '2023-04-01 12:16:05', '2022-11-28 04:26:52');
 insert into article (title, content, hashtag, created_by, modified_by, created_at, modified_at) values ('Nulla nisl.', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', 'Indigo', 'Jeffrey', 'Dawna', '2023-02-11 17:00:31', '2023-02-13 02:28:07');
