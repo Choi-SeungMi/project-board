@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class AuditingFields {
+public abstract class AuditingFields {
 
     //공통 메타데이터
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
