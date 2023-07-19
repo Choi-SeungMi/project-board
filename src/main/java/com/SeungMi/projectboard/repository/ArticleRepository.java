@@ -2,6 +2,7 @@ package com.SeungMi.projectboard.repository;
 
 import com.SeungMi.projectboard.domain.Article;
 import com.SeungMi.projectboard.domain.QArticle;
+import com.SeungMi.projectboard.repository.querydsl.ArticleRepositoryCustom;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface ArticleRepository extends
         JpaRepository<Article, Long>,
         QuerydslPredicateExecutor<Article>,
+        ArticleRepositoryCustom,
         QuerydslBinderCustomizer<QArticle> {
 
         Page<Article> findByTitleContaining(String title, Pageable pageable);
