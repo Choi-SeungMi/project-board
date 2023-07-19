@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -49,6 +50,22 @@ class ArticleServiceTest {
         assertThat(articles).isEmpty();
         then(articleRepository).should().findAll(pageable);
     }
+    @DisplayName("검색어 없이 게시글을 해시태그 검색하면, 빈 페이지를 반환한다.")
+    @Test
+    void givenSearchParameters_whenSearchingArticlesViaHashtag_thenReturnsEmptyPage() {
+        // Given
+        Pageable pageable = Pageable.ofSize(20);
+        //페이지의 사이즈를 20으로 설정하고
+        // When
+        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(null, pageable);
+        //ArticleService의 searchArticlesViaHashtag() 메서드를 통해서 검색어가 null 인 경우 일때
+
+        // Then
+        assertThat(articles).isEqualTo(Page.empty(pageable));
+        //articles의 pageable이 비어있는지를 확인하고
+        then(articleRepository).shouldHaveNoInteractions();
+        //빈 검색어를 입력했으니 DB를 건드릴 일이 없으므로 repository에 대해 아무일도 하지 않는다.
+    }
 
     @DisplayName("검색어와 함께 게시글을 검색하면, 게시글 페이지를 반환한다.")
     @Test
@@ -65,6 +82,27 @@ class ArticleServiceTest {
         // Then
         assertThat(articles).isEmpty();
         then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
+    }
+
+    @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
+    @Test
+    void givenHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlesPage() {
+        // Given
+        String hashtag = "#java";
+        //해시태그 내용을 하나 넣어주고
+        Pageable pageable = Pageable.ofSize(20);
+        given(articleRepository.findByHashtag(hashtag, pageable)).willReturn(Page.empty(pageable));
+        //이미 구현되어 있는 findByHashtag 메서드를 이용해서 페이지를 반환
+        //어떤 페이지인지는 중요하지 않기 때문에 empty 페이지로 작성
+        // When
+        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(hashtag, pageable);
+        //ArticleService의 searchArticlesViaHashtag() 메서드를 통해서 검색어가 있는경우 일때
+
+        // Then
+        assertThat(articles).isEqualTo(Page.empty(pageable));
+        //어떤 페이지를 반환하고 (큰 상관이 없어서 빈페이지를 반환하는 것을 확인)
+        then(articleRepository).should().findByHashtag(hashtag, pageable);
+        //articleRepository가 findByHashtag를 하는지를 검사
     }
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
@@ -178,6 +216,28 @@ class ArticleServiceTest {
         // Then
         assertThat(actual).isEqualTo(expected);
         then(articleRepository).should().count();
+    }
+
+    @DisplayName("해시태그를 조회하면, 유니크 해시태그 리스트를 반환한다")
+    @Test
+    void givenNothing_whenCalling_thenReturnsHashtags() {
+        // Given
+        List<String> expectedHashtags = List.of("#java", "#spring", "#boot");
+        //원하는 모양의 해시태그 리스트를 먼저 만든다.
+        given(articleRepository.findAllDistinctHashtags()).willReturn(expectedHashtags);
+        //articleRepository에서 findAllDistinctHashtags() 메서드를 이용하면
+        //기대하는 해시태그 리스트가 나와야 한다.
+
+        // When
+        List<String> actualHashtags = sut.getHashtags();
+        //articleService의 getHashtags() 메서드를 사용할 때
+
+        // Then
+        assertThat(actualHashtags).isEqualTo(expectedHashtags);
+        //기대하는 모양의 해시태그 리스트와
+        //실제로 getHashtags() 메서드를 통해 얻은 해시태그 리스트가 같은지를 확인
+        then(articleRepository).should().findAllDistinctHashtags();
+        //articleRepository에서 findAllDistinctHashtags() 메서드를 호출했는지 확인
     }
 
     private UserAccount createUserAccount() {
